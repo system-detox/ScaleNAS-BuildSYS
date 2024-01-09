@@ -27,16 +27,16 @@ all: checkout packages update iso
 clean: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build clean
 checkout: check
-	. ./venv-${COMMIT_HASH}/bin/activate && scale_build checkout SKIP_SOURCE_REPO_VALIDATION=1
+	. ./venv-${COMMIT_HASH}/bin/activate && scale_build checkout
 check_upstream_package_updates: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build check_upstream_package_updates
 iso: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build iso
 packages: check
 ifeq ($(PACKAGES),"")
-	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages SKIP_SOURCE_REPO_VALIDATION=1
+	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages
 else
-	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages --packages ${PACKAGES} SKIP_SOURCE_REPO_VALIDATION=1
+	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages --packages ${PACKAGES}
 endif
 update: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build update
