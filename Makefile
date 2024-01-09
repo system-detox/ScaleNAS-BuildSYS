@@ -4,6 +4,7 @@
 PYTHON?=/usr/bin/python3
 COMMIT_HASH=$(shell git rev-parse --short HEAD)
 PACKAGES?=""
+export SKIP_SOURCE_REPO_VALIDATION=1
 REPO_CHANGED=$(shell if [ -d "./venv-$(COMMIT_HASH)" ]; then git status --porcelain | grep -c "scale_build/"; else echo "1"; fi)
 # Check if --break-system-packages flag is supported by pip
 BREAK_SYS_PKGS_FLAG=$(shell ${PYTHON} -m pip help install | grep -q -- '--break-system-packages' && echo "--break-system-packages" || echo "")
@@ -26,16 +27,16 @@ all: checkout packages update iso
 clean: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build clean
 checkout: check
-	. ./venv-${COMMIT_HASH}/bin/activate && scale_build checkout
+	. ./venv-${COMMIT_HASH}/bin/activate && scale_build checkout SKIP_SOURCE_REPO_VALIDATION=1
 check_upstream_package_updates: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build check_upstream_package_updates
 iso: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build iso
 packages: check
 ifeq ($(PACKAGES),"")
-	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages
+	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages SKIP_SOURCE_REPO_VALIDATION=1
 else
-	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages --packages ${PACKAGES}
+	. ./venv-${COMMIT_HASH}/bin/activate && scale_build packages --packages ${PACKAGES} SKIP_SOURCE_REPO_VALIDATION=1
 endif
 update: check
 	. ./venv-${COMMIT_HASH}/bin/activate && scale_build update
